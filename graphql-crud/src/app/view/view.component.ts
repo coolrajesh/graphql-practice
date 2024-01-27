@@ -1,7 +1,7 @@
 import { Component,AfterViewInit,ViewChild, createComponent } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet,RouterLink,RouterLinkActive } from '@angular/router';
-import {GraphQLServiceService } from './services/graph-qlservice.service';
+import {GraphQLServiceService } from '../services/graph-qlservice.service';
 import {gql,Apollo} from 'apollo-angular';
 import {MatTableModule,MatTableDataSource} from '@angular/material/table';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -11,8 +11,6 @@ import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-
-
 
 const query = gql`
 query {
@@ -79,53 +77,36 @@ export interface Product {
 }
 
 
+
 @Component({
-  selector: 'app-root',
+  selector: 'app-view',
   standalone: true,
   imports: [CommonModule, RouterOutlet,MatTableModule,MatToolbarModule,MatCardModule,MatPaginatorModule,MatSortModule,MatButtonModule,MatFormFieldModule, MatInputModule,RouterLink,RouterLinkActive],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  templateUrl: './view.component.html',
+  styleUrl: './view.component.css'
 })
-export class AppComponent{
+export class ViewComponent {
 
-  //@ViewChild(MatPaginator) paginator?: MatPaginator;
-  //@ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator?: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   title = 'graphql-crud';
-  // data:any = [];
-  // displayedColumns: string[] = ['srno','category','title', 'price','description','image'];
-  // dataSource = new MatTableDataSource<Product>(this.data);
-  // createSts:boolean = false;
+  data:any = [];
+  displayedColumns: string[] = ['srno','category','title', 'price','description','image'];
+  dataSource = new MatTableDataSource<Product>(this.data);
 
   constructor(private GraphQLServiceService: GraphQLServiceService,private apollo: Apollo){
    
   }
 
   ngOnInit(): void {
-  //   this.GraphQLServiceService.apiQuery(query).subscribe((res) => {      
-  //     this. data = res.products;
-  //     console.log(res)
-  //     this.dataSource = new MatTableDataSource<Product>(this.data); 
-  //     setTimeout(()=>{
-  //       this.dataSource.paginator = this.paginator!;
-  //       this.dataSource.sort = this.sort; 
-  //     })
-  //  });    
-  }
-  
-  create(){
-    //this.GraphQLServiceService.apiMutation(createMutation);
-   
-      // this.apollo.mutate({
-      // mutation: createMutation,      
-      // }).subscribe(({ data }) => {
-      // console.log('got data', data);
-      // },(error) => {
-      // console.log('there was an error sending the query', error);
-      // });
-    
-      
+    this.GraphQLServiceService.apiQuery(query).subscribe((res) => {      
+      this. data = res.products;
+      console.log(res)
+      this.dataSource = new MatTableDataSource<Product>(this.data); 
+      setTimeout(()=>{
+        this.dataSource.paginator = this.paginator!;
+        this.dataSource.sort = this.sort; 
+      })
+   });    
   }
 }
-
- 
-
